@@ -14,13 +14,15 @@
 - 20 MB file size comfortably fits within address space
     1. Parsing CPU-bound (not amenable to multithreading here)
     2. Overhead for multiprocessing too expensive with respect to input size
-- Deserializer class
+- Parser class
     1. With `\n` as delimiter, serialize each row into a Python object (default serializer supports version 2 flow logs)
     2. Store in an array
 - Similar to database indexing, create indices on source
     1. Point queries, can use hashmaps
 - For both counts and indexes, can simultaneously process during serialization step
 - Expose instrument as CLI
+    1. search and get_counts functionality
+    2. Dump output as JSON
 
 ```
 # Source IP index: Source IP -> row index
