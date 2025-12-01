@@ -35,3 +35,20 @@
     ("1.1.1.1", "255.255.255.255") -> [0]
 }
 ```
+
+## Usage
+- Move flow log txt files underneath `data/`
+- `python3 main.py` to start CLI
+- `help` to list commands
+- `help <cmd>` to get command documentation
+
+```bash
+# example usage
+load data/temp_flowlogs.txt
+set_schema default
+search_src 10.0.1.194
+get_connection_count 10.0.0.159 21248 10.0.1.130 33202 6
+```
+
+## Testing
+`cd tests && python3 tests.py` will run integration test suite. It uses random generation for test cases, but the tests are based off `random.seed(0)`. Please use `cpython` implementation with version `3.9.6` for deterministic testing behavior. Ideally, I'd put this in a `dockerfile` if it were production code.

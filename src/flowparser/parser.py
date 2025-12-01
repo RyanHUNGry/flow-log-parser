@@ -1,6 +1,6 @@
 import collections
-import parser.constants as constants
-from parser.model import Flowlog
+import flowparser.constants as constants
+from flowparser.model import Flowlog
 
 class Parser:
     def __init__(self, path: str, schema=constants.FLOW_LOG_SCHEMA_DEFAULT):
@@ -9,7 +9,7 @@ class Parser:
         self.destination_ip_index: dict[str, list[Flowlog]] = collections.defaultdict(list)
         self.source_and_destination_ip_index: dict[tuple[str, str], list[Flowlog]] = collections.defaultdict(list)
         self.connection_counts: dict[tuple[str, str, str, str, str], int] = collections.defaultdict(int)
-        self.schema = schema
+        self.schema: list[str] = schema
 
     def deserialize(self) -> None:
         row_idx = 0
@@ -19,19 +19,20 @@ class Parser:
                     fields = line.strip().split()
                     flowlog_data = {}
                     for i, field in enumerate(self.schema):
-                        flowlog_data[field] = fields[i]
+                        if fields[i] != '-':
+                            flowlog_data[field] = fields[i]
 
                     flowlog = Flowlog(row_idx=row_idx, schema=self.schema, **flowlog_data)
-                    self.source_ip_index[flowlog.srcaddr].append(flowlog)
-                    self.destination_ip_index[flowlog.dstaddr].append(flowlog)
-                    self.source_and_destination_ip_index[(flowlog.srcaddr, flowlog.dstaddr)].append(flowlog)
-                    self.connection_counts[(flowlog.srcaddr, flowlog.dstaddr, flowlog.srcport, flowlog.dstport, flowlog.protocol)] += 1
+                    self.source_ip_index[getattr(flowlog, "srcaddr")].append(flowlog)
+                    self.destination_ip_index[getattr(flowlog, "dstaddr")].append(flowlog)
+                    self.source_and_destination_ip_index[(getattr(flowlog, "srcaddr"), getattr(flowlog, "dstaddr"))].append(flowlog)
+                    self.connection_counts[(getattr(flowlog, "srcaddr"), getattr(flowlog, "dstaddr"), getattr(flowlog, "srcport"), getattr(flowlog, "dstport"), getattr(flowlog, "protocol"))] += 1
 
                     row_idx += 1
         except FileNotFoundError:
             print(f"File not found: {self.path}")
         except IndexError:
-            print(f"Malformed line at: {row_idx}")
+            print(f"Schema mismatch in line. Please check the schema and ensure it matches the log format.")
         except Exception as e:
             print(f"An error occurred: {e}")
             

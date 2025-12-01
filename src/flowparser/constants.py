@@ -16,8 +16,8 @@ FLOW_LOG_SCHEMA_DEFAULT = [
     "log-status",
 ]
 
-FLOW_LOG_SCHEMA_ALL = [
-    "version",
+FLOW_LOG_SCHEMA_ALL = set(
+    ["version",
     "account-id",
     "interface-id",
     "srcaddr",
@@ -58,5 +58,5 @@ FLOW_LOG_SCHEMA_ALL = [
     "ecs-task-id",
     "reject-reason",
     "resource-id",
-    "encryption-status",
-]
+    "encryption-status"]
+)

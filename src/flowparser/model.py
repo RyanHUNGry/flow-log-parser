@@ -1,4 +1,4 @@
-import parser.constants as constants
+import flowparser.constants as constants
 
 class Flowlog:
     def __init__(self, row_idx, schema=constants.FLOW_LOG_SCHEMA_DEFAULT, **kwargs):
