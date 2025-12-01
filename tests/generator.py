@@ -21,7 +21,6 @@ def rand_ts():
 actions = ["ACCEPT", "REJECT"]
 statuses = ["OK", "NODATA", "SKIPDATA"]
 
-
 def generate_testcase(filename: str, target_size_mb: int = 20) -> str:
     target_size = target_size_mb * 1024 * 1024
     path = os.path.join(os.getcwd(), "..", "data", filename)

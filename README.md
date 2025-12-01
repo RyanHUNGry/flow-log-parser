@@ -17,7 +17,6 @@
 - Deserializer class
     1. With `\n` as delimiter, serialize each row into a Python object (default serializer supports version 2 flow logs)
     2. Store in an array
-    3. `i-01234567890123456 eni-1111aaaa2222bbbb3 subnet-aaaaaaaa012345678 10.0.1.5 203.0.113.5 10.0.1.5 203.0.113.5 #Traffic from the source instance to host on the internet` -> bytes
 - Similar to database indexing, create indices on source
     1. Point queries, can use hashmaps
 - For both counts and indexes, can simultaneously process during serialization step
@@ -37,10 +36,56 @@
 ```
 
 ## Usage
-- Move flow log txt files underneath `data/`
+- Move flow log txt files underneath `data/`. You can generate sample test cases using `tests/generator.py` or by running the test suite once.
 - `python3 main.py` to start CLI
 - `help` to list commands
 - `help <cmd>` to get command documentation
+
+```python
+# valid fields
+fields = ["version",
+    "account-id",
+    "interface-id",
+    "srcaddr",
+    "dstaddr",
+    "srcport",
+    "dstport",
+    "protocol",
+    "packets",
+    "bytes",
+    "start",
+    "end",
+    "action",
+    "log-status",
+    "vpc-id",
+    "subnet-id",
+    "instance-id",
+    "tcp-flags",
+    "type",
+    "pkt-srcaddr",
+    "pkt-dstaddr",
+    "region",
+    "az-id",
+    "sublocation-type",
+    "sublocation-id",
+    "pkt-src-aws-service",
+    "pkt-dst-aws-service",
+    "flow-direction",
+    "traffic-path",
+    "ecs-cluster-arn",
+    "ecs-cluster-name",
+    "ecs-container-instance-arn",
+    "ecs-container-instance-id",
+    "ecs-container-id",
+    "ecs-second-container-id",
+    "ecs-service-name",
+    "ecs-task-definition-arn",
+    "ecs-task-arn",
+    "ecs-task-id",
+    "reject-reason",
+    "resource-id",
+    "encryption-status"]
+```
 
 ```bash
 # example usage
@@ -48,6 +93,12 @@ load data/temp_flowlogs.txt
 set_schema default
 search_src 10.0.1.194
 get_connection_count 10.0.0.159 21248 10.0.1.130 33202 6
+
+# for custom schema (make sure flow logs adhere to this, and must be called before load)
+set_schema interface-id srcaddr srcport dstaddr dstport protocol packets bytes start end action log-status
+
+# write to output
+search_src 10.0.1.194 output.txt
 ```
 
 ## Testing
