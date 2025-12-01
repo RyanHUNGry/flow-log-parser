@@ -3,7 +3,7 @@
 ## Functional requirements
 - Filter rows based on source/destination IP addresses
 - Store counts for connections
-- Pytests
+- Tests
 
 ## Notes
 - 20 MB flow log size
